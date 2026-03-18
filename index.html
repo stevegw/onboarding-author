@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PTC eLearning Authoring Platform</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-header">
+      <div class="sb-brand">
+        <h1>Authoring</h1>
+        <p>PTC eLearning Platform</p>
+      </div>
+      <div class="sb-controls">
+        <button class="icon-btn" id="theme-btn" title="Toggle theme">☽</button>
+      </div>
+    </div>
+
+    <nav class="sb-nav">
+      <div class="sb-nav-label">Workspace</div>
+      <div class="sb-nav-item active" data-nav="catalog" id="nav-catalog">
+        <span class="nav-icon">🏠</span>
+        <span class="nav-label">Catalog</span>
+      </div>
+
+      <div class="sb-nav-label" style="margin-top:8px">Import</div>
+      <div class="sb-nav-item" id="nav-import">
+        <span class="nav-icon">⬆</span>
+        <span class="nav-label">Import Project JSON</span>
+      </div>
+      <input type="file" id="import-file" accept=".json" style="display:none">
+
+      <div class="sb-nav-label" style="margin-top:8px">Resources</div>
+      <div class="sb-nav-item" id="nav-schema">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Block Schema Reference</span>
+      </div>
+    </nav>
+
+    <div class="sb-footer">
+      <div class="sb-footer-note">Outputs OB-compatible JSON</div>
+      <div class="sb-footer-note" style="margin-top:4px">v1.0 · GitHub Pages</div>
+    </div>
+  </aside>
+
+  <!-- ── Main ── -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar" id="topbar">
+      <div class="topbar-breadcrumb" id="topbar-breadcrumb">
+        <span>Catalog</span>
+      </div>
+      <div class="topbar-actions" id="topbar-actions">
+        <!-- Dynamic actions injected by router -->
+      </div>
+    </div>
+
+    <!-- ── Catalog View ── -->
+    <div class="view active" id="view-catalog"></div>
+
+    <!-- ── Editor View ── -->
+    <div class="view" id="view-editor">
+      <div class="editor-view">
+
+        <!-- Left: Module Tree -->
+        <div class="editor-panel-left">
+          <div class="panel-header">
+            <h3>Modules & Topics</h3>
+            <div style="display:flex;gap:4px">
+              <button class="icon-btn" id="collapse-all-btn" title="Collapse all" style="width:24px;height:24px;font-size:11px">−</button>
+            </div>
+          </div>
+          <div class="module-tree" id="module-tree"></div>
+        </div>
+
+        <!-- Right: Content Editor -->
+        <div class="editor-content">
+          <!-- Toolbar -->
+          <div class="editor-toolbar">
+            <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+              <span id="toolbar-product-badge" style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent-glow);text-transform:uppercase;letter-spacing:0.5px;flex-shrink:0"></span>
+              <span class="toolbar-title" id="toolbar-project-title"></span>
+              <span class="toolbar-sep"></span>
+              <span class="toolbar-title" id="toolbar-title" style="font-weight:400;color:var(--text-muted)"></span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn btn-secondary btn-sm" id="export-ob-btn" title="Export OB-compatible ZIP">⬇ Export</button>
+              <button class="btn btn-secondary btn-sm" id="save-raw-btn" title="Save raw project JSON">💾 Save JSON</button>
+            </div>
+          </div>
+
+          <!-- Editor Body -->
+          <div class="editor-body" id="editor-body">
+            <div class="editor-placeholder">
+              <div class="editor-placeholder-icon">📄</div>
+              <h3>Select a topic to edit</h3>
+              <p>Choose a topic from the module tree, or add a new one.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /.main -->
+
+</div><!-- /#app -->
+
+<!-- ── Undo Bar ── -->
+<div class="undo-bar" id="undo-bar">
+  <span class="undo-bar-msg">Changes recorded</span>
+  <span class="undo-count" id="undo-count">0/10</span>
+  <button class="btn btn-secondary btn-xs" id="undo-btn">↩ Undo</button>
+  <button class="btn btn-secondary btn-xs" id="redo-btn">↪ Redo</button>
+</div>
+
+<!-- ── Schema Reference Modal ── -->
+<div id="schema-modal" style="display:none">
+  <div class="modal-overlay" id="schema-overlay">
+    <div class="modal" style="max-width:640px;max-height:80vh;overflow-y:auto">
+      <h3 style="margin-bottom:16px">Content Block Schema Reference</h3>
+      <div id="schema-body"></div>
+      <div class="modal-actions" style="margin-top:20px">
+        <button class="btn btn-secondary" id="schema-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast Container ── -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- JS: load order matters -->
+<script src="js/ui.js"></script>
+<script src="js/state.js"></script>
+<script src="js/catalog.js"></script>
+<script src="js/catalog-view.js"></script>
+<script src="js/blocks.js"></script>
+<script src="js/tree.js"></script>
+<script src="js/editor.js"></script>
+<script src="js/export.js"></script>
+<script src="js/narration.js"></script>
+<script src="js/router.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  // ── Init ──
+  AP.ui.initTheme();
+  AP.ui.initUndoBar();
+
+  // ── Theme toggle ──
+  document.getElementById('theme-btn').onclick = function () {
+    var t = AP.ui.toggleTheme();
+    this.textContent = t === 'dark' ? '☽' : '☀';
+  };
+
+  // ── Sidebar navigation ──
+  document.getElementById('nav-catalog').onclick = function () {
+    AP.router.go('catalog');
+  };
+
+  // ── Import ──
+  document.getElementById('nav-import').onclick = function () {
+    document.getElementById('import-file').click();
+  };
+  document.getElementById('import-file').onchange = function () {
+    var file = this.files[0];
+    if (file) AP.exportMgr.importProject(file);
+    this.value = '';
+  };
+
+  // ── Schema reference ──
+  var SCHEMA_HTML = [
+    '<p style="font-size:12px;color:var(--text-muted);margin-bottom:14px">These schemas are used by <code>topic.js</code> in the OB player. The authoring platform writes exactly these structures.</p>',
+    '<pre style="font-size:11px;background:var(--bg-base);border:1px solid var(--border);border-radius:6px;padding:14px;overflow-x:auto;line-height:1.7;color:var(--text-secondary)">',
+    'paragraph:         { type, text }\n',
+    'heading:           { type, level (2|3), text }\n',
+    'callout:           { type, variant (tip|info|warning|insight), text }\n',
+    'comparison-table:  { type, headers: string[], rows: string[][] }\n',
+    'reveal-cards:      { type, cards: [{ front, back }] }\n',
+    'interactive-match: { type, prompt, pairs: [{ left, right }] }\n',
+    'interactive-sort:  { type, prompt, items: string[] }  ← correct order, renderer shuffles\n',
+    'image:             { type, src, alt, caption, size (small|medium|large|full) }\n',
+    'exercise:          { type, exerciseId, title, objective,\n',
+    '                     tasks: [{ id, title,\n',
+    '                       steps: [{ action, detail, hint }] }] }',
+    '</pre>'
+  ].join('');
+
+  document.getElementById('nav-schema').onclick = function () {
+    document.getElementById('schema-body').innerHTML = SCHEMA_HTML;
+    document.getElementById('schema-modal').style.display = 'block';
+  };
+  document.getElementById('schema-close').onclick = function () {
+    document.getElementById('schema-modal').style.display = 'none';
+  };
+  document.getElementById('schema-overlay').onclick = function (e) {
+    if (e.target === this) document.getElementById('schema-modal').style.display = 'none';
+  };
+
+  // ── Editor toolbar buttons ──
+  document.getElementById('export-ob-btn').onclick = function () {
+    AP.exportMgr.exportProject();
+  };
+
+  document.getElementById('save-raw-btn').onclick = function () {
+    var p = AP.state.getCurrentProject();
+    if (!p) { AP.ui.toast('No project open', 'error'); return; }
+    AP.ui.downloadJson(
+      (p.title || 'project').toLowerCase().replace(/\s+/g, '-') + '-raw.json',
+      p
+    );
+    AP.ui.toast('Raw JSON downloaded', 'success');
+  };
+
+  // ── Collapse all modules ──
+  document.getElementById('collapse-all-btn').onclick = function () {
+    document.querySelectorAll('.topic-list.open').forEach(function (l) { l.classList.remove('open'); });
+    document.querySelectorAll('.module-header.expanded').forEach(function (h) { h.classList.remove('expanded'); });
+  };
+
+  // ── Keyboard shortcuts ──
+  document.addEventListener('keydown', function (e) {
+    var isCtrl = e.ctrlKey || e.metaKey;
+    if (isCtrl && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      var r = AP.state.undo();
+      if (r) { AP.editor.reload(r); AP.ui.toast('Undone', 'info'); }
+    }
+    if (isCtrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
+      e.preventDefault();
+      var r = AP.state.redo();
+      if (r) { AP.editor.reload(r); AP.ui.toast('Redone', 'info'); }
+    }
+  });
+
+  // ── Start ──
+  AP.router.go('catalog');
+  if (AP.narration.isSupported()) AP.narration.init();
+})();
+</script>
+</body>
+</html>

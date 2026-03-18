@@ -1,0 +1,156 @@
+{
+  "id": "creo-template",
+  "product": "creo",
+  "title": "Creo Parametric: Fundamentals Overview",
+  "description": "",
+  "modules": [
+    {
+      "id": "creo-m1",
+      "title": "Introduction to Creo Parametric",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "creo-m1t1",
+          "title": "What is Parametric CAD",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m1t2",
+          "title": "Creo Interface Overview",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m1t3",
+          "title": "Model Tree and Layers",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m1t4",
+          "title": "Navigate the Creo Interface",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "creo-m2",
+      "title": "Part Modeling",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "creo-m2t1",
+          "title": "Sketcher Fundamentals",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m2t2",
+          "title": "Extrudes, Revolves, and Sweeps",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m2t3",
+          "title": "Rounds, Chamfers, and Shells",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m2t4",
+          "title": "Create Your First Part",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "creo-m3",
+      "title": "Assembly Design",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "creo-m3t1",
+          "title": "Assembly Concepts and Constraints",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m3t2",
+          "title": "Component Placement",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m3t3",
+          "title": "Bill of Materials",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m3t4",
+          "title": "Assemble Components",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "creo-m4",
+      "title": "Drawing and Documentation",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "creo-m4t1",
+          "title": "Drawing Views and Projections",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m4t2",
+          "title": "Dimensions and Annotations",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m4t3",
+          "title": "Title Blocks and Templates",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "creo-m4t4",
+          "title": "Create an Engineering Drawing",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    }
+  ]
+}

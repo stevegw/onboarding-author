@@ -1,0 +1,171 @@
+{
+  "id": "codebeamer-template",
+  "product": "codebeamer",
+  "title": "Codebeamer: Fundamentals Overview",
+  "description": "",
+  "modules": [
+    {
+      "id": "cb-m1",
+      "title": "Introduction to Codebeamer and ALM",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "cb-m1t1",
+          "title": "Application Lifecycle Management",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m1t2",
+          "title": "Codebeamer as an ALM Solution",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m1t3",
+          "title": "The ALM Development Framework",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m1t4",
+          "title": "Set Up Your Environment",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m1t5",
+          "title": "Explore Customer Requirements",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "cb-m2",
+      "title": "Trackers and Requirements Management",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "cb-m2t1",
+          "title": "Understanding Trackers",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m2t2",
+          "title": "Requirements Lifecycle",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m2t3",
+          "title": "Tracker Item Workflows",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m2t4",
+          "title": "View Options and Filtering",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m2t5",
+          "title": "Manage Requirements",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "cb-m3",
+      "title": "Test Management",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "cb-m3t1",
+          "title": "Test Management Concepts",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m3t2",
+          "title": "Test Configurations and Cases",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m3t3",
+          "title": "Test Runs and Sets",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m3t4",
+          "title": "Execute a Test Run",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "cb-m4",
+      "title": "Data Visualization and Reporting",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "cb-m4t1",
+          "title": "cbQL Queries and Filtering",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m4t2",
+          "title": "Traceability Views",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m4t3",
+          "title": "Exporting Data",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "cb-m4t4",
+          "title": "Build a Report",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    }
+  ]
+}

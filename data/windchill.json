@@ -1,0 +1,148 @@
+{
+  "id": "windchill-template",
+  "product": "windchill",
+  "title": "Windchill: Fundamentals Overview",
+  "description": "",
+  "modules": [
+    {
+      "id": "wc-m1",
+      "title": "Introduction to Windchill and PLM",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "wc-m1t1",
+          "title": "What is Product Lifecycle Management",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m1t2",
+          "title": "Windchill as a PLM Solution",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m1t3",
+          "title": "The PLM Development Framework",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m1t4",
+          "title": "Set Up Your Environment",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "wc-m2",
+      "title": "Parts and Documents",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "wc-m2t1",
+          "title": "Understanding Parts in Windchill",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m2t2",
+          "title": "Document Management",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m2t3",
+          "title": "Versioning and Iteration",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m2t4",
+          "title": "Create and Manage a Part",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "wc-m3",
+      "title": "Change Management",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "wc-m3t1",
+          "title": "Change Management Concepts",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m3t2",
+          "title": "Change Requests and Change Notices",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m3t3",
+          "title": "Workflows and Approvals",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m3t4",
+          "title": "Submit a Change Request",
+          "estimatedMinutes": 0,
+          "isExercise": true,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    },
+    {
+      "id": "wc-m4",
+      "title": "Visualization and Reporting",
+      "description": "",
+      "estimatedMinutes": 0,
+      "topics": [
+        {
+          "id": "wc-m4t1",
+          "title": "3D Visualization in Windchill",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m4t2",
+          "title": "BOM Views and Reporting",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        },
+        {
+          "id": "wc-m4t3",
+          "title": "Export and Integration",
+          "estimatedMinutes": 0,
+          "content": [],
+          "keyTakeaways": []
+        }
+      ]
+    }
+  ]
+}
