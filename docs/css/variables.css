@@ -1,0 +1,201 @@
+/* OB -- Onboarding -- CSS Custom Properties */
+/* Adapted from WCAI/WCOCP theme system */
+
+[data-theme="dark"] {
+  --c-bg-base: #0f172a;
+  --c-bg-surface: #1e293b;
+  --c-bg-surface-hover: #1a2744;
+  --c-bg-surface-active: #253347;
+  --c-border: #334155;
+  --c-border-hover: #475569;
+  --c-text-primary: #f1f5f9;
+  --c-text: #e2e8f0;
+  --c-text-secondary: #cbd5e1;
+  --c-text-muted: #94a3b8;
+  --c-text-dim: #64748b;
+  --c-accent: #22c55e;
+  --c-accent-hover: #16a34a;
+  --c-accent-deep: #166534;
+  --c-on-accent: #0f172a;
+  --c-danger: #ef4444;
+  --c-danger-light: #fca5a5;
+  --c-warning: #f59e0b;
+  --c-warning-light: #fcd34d;
+  --c-info: #3b82f6;
+  --c-info-light: #60a5fa;
+  --c-info-lighter: #93c5fd;
+  --c-ref-blue: #4ea8de;
+  --c-ref-orange: #f4a261;
+  --c-ref-green: #7ec98f;
+  --c-ref-purple: #c084fc;
+  /* Tinted backgrounds */
+  --c-accent-004: rgba(34,197,94,0.04);
+  --c-accent-006: rgba(34,197,94,0.06);
+  --c-accent-008: rgba(34,197,94,0.08);
+  --c-accent-010: rgba(34,197,94,0.1);
+  --c-accent-015: rgba(34,197,94,0.15);
+  --c-accent-020: rgba(34,197,94,0.2);
+  --c-accent-030: rgba(34,197,94,0.3);
+  --c-danger-008: rgba(239,68,68,0.08);
+  --c-danger-010: rgba(239,68,68,0.1);
+  --c-danger-015: rgba(239,68,68,0.15);
+  --c-danger-020: rgba(239,68,68,0.2);
+  --c-danger-030: rgba(239,68,68,0.3);
+  --c-warning-008: rgba(245,158,11,0.08);
+  --c-warning-010: rgba(245,158,11,0.1);
+  --c-warning-015: rgba(245,158,11,0.15);
+  --c-warning-020: rgba(245,158,11,0.2);
+  --c-info-004: rgba(59,130,246,0.04);
+  --c-info-006: rgba(59,130,246,0.06);
+  --c-info-008: rgba(59,130,246,0.08);
+  --c-info-010: rgba(59,130,246,0.1);
+  --c-info-015: rgba(59,130,246,0.15);
+  --c-info-020: rgba(59,130,246,0.2);
+  --c-info-030: rgba(59,130,246,0.3);
+  --c-purple-008: rgba(192,132,252,0.08);
+  --c-purple-015: rgba(192,132,252,0.15);
+  --c-purple-020: rgba(192,132,252,0.2);
+  --c-neutral-004: rgba(148,163,184,0.04);
+  --c-neutral-006: rgba(148,163,184,0.06);
+  /* Module accent colors */
+  --c-module-1: var(--c-ref-blue);
+  --c-module-2: var(--c-ref-orange);
+  --c-module-3: var(--c-ref-green);
+  --c-module-4: var(--c-ref-purple);
+}
+
+[data-theme="light"] {
+  --c-bg-base: #f8fafc;
+  --c-bg-surface: #ffffff;
+  --c-bg-surface-hover: #f1f5f9;
+  --c-bg-surface-active: #e2e8f0;
+  --c-border: #e2e8f0;
+  --c-border-hover: #cbd5e1;
+  --c-text-primary: #0f172a;
+  --c-text: #1e293b;
+  --c-text-secondary: #475569;
+  --c-text-muted: #64748b;
+  --c-text-dim: #94a3b8;
+  --c-accent: #16a34a;
+  --c-accent-hover: #15803d;
+  --c-accent-deep: #166534;
+  --c-on-accent: #ffffff;
+  --c-danger: #dc2626;
+  --c-danger-light: #b91c1c;
+  --c-warning: #d97706;
+  --c-warning-light: #b45309;
+  --c-info: #2563eb;
+  --c-info-light: #3b82f6;
+  --c-info-lighter: #1d4ed8;
+  --c-ref-blue: #0284c7;
+  --c-ref-orange: #ea580c;
+  --c-ref-green: #16a34a;
+  --c-ref-purple: #9333ea;
+  /* Tinted backgrounds */
+  --c-accent-004: rgba(22,163,74,0.04);
+  --c-accent-006: rgba(22,163,74,0.06);
+  --c-accent-008: rgba(22,163,74,0.08);
+  --c-accent-010: rgba(22,163,74,0.1);
+  --c-accent-015: rgba(22,163,74,0.15);
+  --c-accent-020: rgba(22,163,74,0.2);
+  --c-accent-030: rgba(22,163,74,0.3);
+  --c-danger-008: rgba(220,38,38,0.08);
+  --c-danger-010: rgba(220,38,38,0.1);
+  --c-danger-015: rgba(220,38,38,0.15);
+  --c-danger-020: rgba(220,38,38,0.2);
+  --c-danger-030: rgba(220,38,38,0.3);
+  --c-warning-008: rgba(217,119,6,0.1);
+  --c-warning-010: rgba(217,119,6,0.12);
+  --c-warning-015: rgba(217,119,6,0.18);
+  --c-warning-020: rgba(217,119,6,0.2);
+  --c-info-004: rgba(37,99,235,0.06);
+  --c-info-006: rgba(37,99,235,0.08);
+  --c-info-008: rgba(37,99,235,0.1);
+  --c-info-010: rgba(37,99,235,0.12);
+  --c-info-015: rgba(37,99,235,0.15);
+  --c-info-020: rgba(37,99,235,0.2);
+  --c-info-030: rgba(37,99,235,0.3);
+  --c-purple-008: rgba(147,51,234,0.1);
+  --c-purple-015: rgba(147,51,234,0.15);
+  --c-purple-020: rgba(147,51,234,0.2);
+  --c-neutral-004: rgba(100,116,139,0.06);
+  --c-neutral-006: rgba(100,116,139,0.08);
+  /* Module accent colors */
+  --c-module-1: var(--c-ref-blue);
+  --c-module-2: var(--c-ref-orange);
+  --c-module-3: var(--c-ref-green);
+  --c-module-4: var(--c-ref-purple);
+}
+
+/* ============================================================
+   PTC Scheme - Dark
+   ============================================================ */
+[data-scheme="ptc"][data-theme="dark"] {
+  /* Backgrounds - neutral dark grays (PTC gray family) */
+  --c-bg-base: #1a1c1e;
+  --c-bg-surface: #27292b;
+  --c-bg-surface-hover: #2b332a;
+  --c-bg-surface-active: #353d33;
+  --c-border: #43474a;
+  --c-border-hover: #53565a;
+  /* Text - warm neutrals */
+  --c-text-primary: #f0f0ee;
+  --c-text: #ddddd9;
+  --c-text-secondary: #b8b8b4;
+  --c-text-muted: #8a8d90;
+  --c-text-dim: #636669;
+  /* Accent - PTC Green */
+  --c-accent: #69be28;
+  --c-accent-hover: #5aa622;
+  --c-accent-deep: #3d7317;
+  --c-on-accent: #1a1c1e;
+  /* Module ref green → PTC Green */
+  --c-ref-green: #69be28;
+  /* Accent tints - PTC Green rgb(105,190,40) */
+  --c-accent-004: rgba(105,190,40,0.06);
+  --c-accent-006: rgba(105,190,40,0.08);
+  --c-accent-008: rgba(105,190,40,0.1);
+  --c-accent-010: rgba(105,190,40,0.12);
+  --c-accent-015: rgba(105,190,40,0.18);
+  --c-accent-020: rgba(105,190,40,0.24);
+  --c-accent-030: rgba(105,190,40,0.35);
+  /* Neutral tints */
+  --c-neutral-004: rgba(138,141,144,0.04);
+  --c-neutral-006: rgba(138,141,144,0.06);
+}
+
+/* ============================================================
+   PTC Scheme - Light
+   ============================================================ */
+[data-scheme="ptc"][data-theme="light"] {
+  /* Backgrounds - white base, warm surface (matching reference) */
+  --c-bg-base: #ffffff;
+  --c-bg-surface: #f7f8f6;
+  --c-bg-surface-hover: #edf7e0;
+  --c-bg-surface-active: #ddecc8;
+  --c-border: #e2e2e2;
+  --c-border-hover: #d0d0d0;
+  /* Text - PTC Gray family */
+  --c-text-primary: #2b2d2f;
+  --c-text: #2b2d2f;
+  --c-text-secondary: #53565a;
+  --c-text-muted: #6b6e72;
+  --c-text-dim: #8a8d90;
+  /* Accent - PTC Green (darker variant for light bg contrast) */
+  --c-accent: #4d8f1e;
+  --c-accent-hover: #3d7317;
+  --c-accent-deep: #2d5711;
+  /* Module ref green → PTC Green */
+  --c-ref-green: #4d8f1e;
+  /* Accent tints - stronger opacities to match #edf7e0 feel */
+  --c-accent-004: rgba(105,190,40,0.06);
+  --c-accent-006: rgba(105,190,40,0.08);
+  --c-accent-008: rgba(105,190,40,0.1);
+  --c-accent-010: rgba(105,190,40,0.12);
+  --c-accent-015: rgba(105,190,40,0.18);
+  --c-accent-020: rgba(105,190,40,0.24);
+  --c-accent-030: rgba(105,190,40,0.35);
+  /* Neutral tints */
+  --c-neutral-004: rgba(107,110,114,0.06);
+  --c-neutral-006: rgba(107,110,114,0.08);
+}

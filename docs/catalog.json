@@ -1,0 +1,343 @@
+{
+  "title": "PTC Training Catalog",
+  "description": "Interactive onboarding courses for PTC products",
+  "families": [
+    {
+      "id": "windchill",
+      "name": "Windchill",
+      "color": "#4EA8DE",
+      "icon": "&#9881;",
+      "courses": [
+        {
+          "id": "wcfd-over",
+          "title": "Windchill Fundamentals Overview",
+          "description": "Explore how Windchill provides the tools to organize and access product data throughout the product life cycle. Navigate the user interface, browse and search for data, work with tables, and modify objects.",
+          "pdfFile": "WCFD-OVER-Training-Guide.pdf",
+          "modules": 4,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wcfd-ebom",
+          "title": "Fundamentals of Engineering BOM (eBOM)",
+          "description": "Learn to create, filter, and work with an engineering bill of materials (eBOM) using the Product Structure Browser.",
+          "pdfFile": "WCFD-EBOM-Training-Guide.pdf",
+          "prerequisite": "wcfd-over",
+          "modules": 4,
+          "estimatedHours": 2,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wcba-cntx",
+          "title": "Introduction and Context Administration",
+          "description": "Configure Windchill to work with your enterprise's product development process. Identify contexts and their relationships, create and manage organizations, products, and libraries, build context templates, and control system behavior.",
+          "pdfFile": "WCBA-CNTX-Training-Guide.pdf",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wcba-team",
+          "title": "Participants and Teams",
+          "description": "Plan and associate participants with the roles, groups, context teams, and access needed for business processes.",
+          "pdfFile": "WCBA-TEAM-Training-Guide.pdf",
+          "prerequisite": "wc-context",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wc-objtypes",
+          "title": "Object Types",
+          "description": "Configure and manage Windchill object types, subtypes, and type hierarchies.",
+          "pdfFile": "WCBA-OBTY-Training-Guide.pdf",
+          "modules": 0,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "wcba-accs",
+          "title": "Access Control",
+          "description": "Compare access control priorities and define rules using domain policies, ad hoc access, and security labels.",
+          "pdfFile": "WCBA-ACCS-Training-Guide.pdf",
+          "prerequisite": "wc-objtypes",
+          "modules": 4,
+          "estimatedHours": 2,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wc-reporting",
+          "title": "Reporting",
+          "description": "Create and manage reports, queries, and data visualization in Windchill.",
+          "pdfFile": "WCBA-RPTG-Training-Guide.pdf",
+          "modules": 0,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "wc-abtt",
+          "title": "Advanced BOM Transformation Topics",
+          "description": "Advanced techniques for BOM transformation, restructuring, and manufacturing views.",
+          "pdfFile": "WCBM-ABTT-Training-Guide.pdf",
+          "modules": 0,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "wccm-auto",
+          "title": "Automate Change Processes",
+          "description": "Configure life cycles and workflow templates to automate change processes. Understand queue management for tuning workflow performance.",
+          "pdfFile": "WCCM-AUTO-Training-Guide.pdf",
+          "prerequisite": "wcba-accs",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wc-changeimpl",
+          "title": "Change Implementation",
+          "description": "Implement change processes including change requests, notices, and tasks.",
+          "pdfFile": "WCCM-CHIM-Training-Guide.pdf",
+          "modules": 0,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "wccm-adcm",
+          "title": "Tailoring Change Management",
+          "description": "Plan and implement a tailored change management process. Create custom change objects, configure business rules, modify workflows and life cycles, and test the complete change process.",
+          "pdfFile": "WCCM-ADCM-Training-Guide.pdf",
+          "prerequisite": "wc-changeimpl",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wc-ocp1",
+          "title": "Options & Configurable Products 1",
+          "description": "Learn business approaches to configurable products, explore options and variants terminology, investigate rules, and master option sets.",
+          "pdfFile": "WCCB-OCP1-Training-Guide.pdf",
+          "modules": 4,
+          "estimatedHours": 2,
+          "locales": [
+            "en",
+            "fr",
+            "de",
+            "ja",
+            "zh",
+            "ko",
+            "es"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wc-ocp2",
+          "title": "Options & Configurable Products 2",
+          "description": "Advanced OCP topics including complex rules, advanced option sets, and integration patterns.",
+          "pdfFile": "WCCB-OCP2-Training-Guide.pdf",
+          "prerequisite": "wc-ocp1",
+          "modules": 0,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "wcec-rest",
+          "title": "REST Services",
+          "description": "Connect and manipulate data sent to and from Windchill. Prototype multiple types of REST requests for a process-based use case and analyze the responses.",
+          "pdfFile": "WCEC-REST-Training-Guide.pdf",
+          "prerequisite": "wcfd-over",
+          "modules": 4,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "wcba-uag",
+          "title": "User Accounts and Groups",
+          "description": "User Accounts and Groups",
+          "modules": 3,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        }
+      ]
+    },
+    {
+      "id": "codebeamer",
+      "name": "Codebeamer",
+      "color": "#A78BFA",
+      "icon": "&#128202;",
+      "courses": [
+        {
+          "id": "cb-overview",
+          "title": "Codebeamer Fundamentals Overview",
+          "description": "Introduction to Codebeamer ALM platform - trackers, requirements management, test management, and data visualization.",
+          "pdfFile": "CBFD-OVER-Training-Guide.pdf",
+          "modules": 4,
+          "estimatedHours": 2,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "cb-reqmgmt",
+          "title": "Fundamentals of Requirements Management",
+          "description": "Gain proficiency in Codebeamer to record, refine, trace, and link requirements using techniques including mass edit, Microsoft Office integration, views, reports, and filters.",
+          "pdfFile": "CBFD-REQM-Training-Guide.pdf",
+          "prerequisite": "cb-overview",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "cb-testmgmt",
+          "title": "Test Management",
+          "description": "Plan, execute, and track testing activities and test cases.",
+          "pdfFile": "CBFD-TEST-Training-Guide.pdf",
+          "prerequisite": "cb-overview",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "cb-projrptg",
+          "title": "Project Management and Reporting",
+          "description": "Manage projects, sprints, and generate reports in Codebeamer.",
+          "pdfFile": "CBFD-RPTG-Training-Guide.pdf",
+          "modules": 0,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        }
+      ]
+    },
+    {
+      "id": "creo",
+      "name": "Creo",
+      "color": "#6EE7B7",
+      "icon": "&#9998;",
+      "courses": [
+        {
+          "id": "creo-mdl1",
+          "title": "Fundamentals Modeling 1",
+          "description": "Core 3D modeling fundamentals including the Creo design process, parametric concepts, the user interface, feature editing, sketching, datums, and extrude features.",
+          "pdfFile": "CRFD-MDL1-Training-Guidebook.pdf",
+          "modules": 4,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "creo-mdl2",
+          "title": "Fundamentals Modeling 2",
+          "description": "Advanced modeling techniques including sweeps, blends, patterns, and surface modeling.",
+          "pdfFile": "CRFD-MDL2-Training-Guidebook.pdf",
+          "prerequisite": "creo-mdl1",
+          "modules": 0,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "creo-assy",
+          "title": "Fundamentals Assembly",
+          "description": "Assembly design fundamentals including constraints, mechanisms, and BOM management.",
+          "pdfFile": "CRFD-ASBY-Training-Guidebook.pdf",
+          "modules": 0,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "creo-drawing",
+          "title": "Fundamentals 2D Drawing",
+          "description": "Create engineering drawings with views, dimensions, annotations, and drawing standards.",
+          "pdfFile": "CRFD-DRWG-Training-Guidebook.pdf",
+          "modules": 0,
+          "estimatedHours": 4,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": true
+        },
+        {
+          "id": "creo-fdasby",
+          "title": "Interactive_iSpring_R2_CRFD-ASBY",
+          "description": "Interactive_iSpring_R2_CRFD-ASBY",
+          "modules": 5,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        },
+        {
+          "id": "creo-r2crd-asby",
+          "title": "Interactive_iSpring_R2_CRFD-ASBY",
+          "description": "Interactive_iSpring_R2_CRFD-ASBY",
+          "modules": 5,
+          "estimatedHours": 3,
+          "locales": [
+            "en"
+          ],
+          "comingSoon": false
+        }
+      ]
+    }
+  ]
+}
