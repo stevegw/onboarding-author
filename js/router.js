@@ -16,6 +16,9 @@
       AP.editor.showPlaceholder();
       _setBreadcrumb(project.title, '');
       _updateProjectHeader(project);
+      if (AP.ui.isMobile() && AP.preview) {
+        AP.preview.setMode('preview');
+      }
     }
   }
 

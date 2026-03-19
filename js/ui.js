@@ -270,6 +270,10 @@
     return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
+  function isMobile() {
+    return window.innerWidth <= 860;
+  }
+
   AP.ui = {
     qs: qs, qsa: qsa, el: el,
     escapeHtml: escapeHtml,
@@ -281,6 +285,7 @@
     initUndoBar: initUndoBar,
     initPanelResize: initPanelResize,
     downloadJson: downloadJson,
-    formatDate: formatDate
+    formatDate: formatDate,
+    isMobile: isMobile
   };
 })();

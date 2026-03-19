@@ -760,6 +760,19 @@ body {
   .catalog-view { padding: 20px; }
   .editor-panel-left { width: 220px; }
   .resize-handle { display: none; }
+
+  /* Mobile preview-only: hide authoring controls */
+  #mode-toggle-btn,
+  #export-ob-btn,
+  #save-raw-btn { display: none; }
+  .add-block-palette { display: none; }
+  .topic-meta-bar { display: none; }
+  .takeaway-add-btn { display: none; }
+  .undo-bar { display: none; }
+
+  /* Hide tree authoring controls on mobile */
+  .tree-add-btn,
+  .module-icon-btn { display: none !important; }
 }
 
 @media (max-width: 600px) {

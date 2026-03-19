@@ -12,13 +12,21 @@
 
     container.innerHTML = '';
     var wrap = AP.ui.el('div', { class: 'catalog-view' });
+    var mobile = AP.ui.isMobile();
 
     // ── Hero ──
     var hero = AP.ui.el('div', { class: 'catalog-hero' });
-    hero.innerHTML = [
-      '<h2>eLearning Authoring Platform</h2>',
-      '<p>Build PTC training courses. Start from a product skeleton, populate content, then export OB-compatible JSON for the player.</p>'
-    ].join('');
+    if (mobile) {
+      hero.innerHTML = [
+        '<h2>Browse Training Content</h2>',
+        '<p>Open a project to preview its content.</p>'
+      ].join('');
+    } else {
+      hero.innerHTML = [
+        '<h2>eLearning Authoring Platform</h2>',
+        '<p>Build PTC training courses. Start from a product skeleton, populate content, then export OB-compatible JSON for the player.</p>'
+      ].join('');
+    }
     wrap.appendChild(hero);
 
     // ── Saved projects ──
@@ -57,9 +65,9 @@
           '</div>',
           '<div class="project-card-actions">',
             '<button class="btn btn-primary btn-sm open-btn" data-id="' + proj.id + '">Open</button>',
-            '<button class="btn btn-secondary btn-sm rename-btn" data-id="' + proj.id + '" data-name="' + AP.ui.escapeHtml(proj.name) + '">Rename</button>',
-            '<button class="btn btn-secondary btn-sm export-btn" data-id="' + proj.id + '">Export</button>',
-            '<button class="btn btn-danger btn-sm delete-btn" data-id="' + proj.id + '">Delete</button>',
+            mobile ? '' : '<button class="btn btn-secondary btn-sm rename-btn" data-id="' + proj.id + '" data-name="' + AP.ui.escapeHtml(proj.name) + '">Rename</button>',
+            mobile ? '' : '<button class="btn btn-secondary btn-sm export-btn" data-id="' + proj.id + '">Export</button>',
+            mobile ? '' : '<button class="btn btn-danger btn-sm delete-btn" data-id="' + proj.id + '">Delete</button>',
           '</div>'
         ].join('');
         grid.appendChild(card);
@@ -118,7 +126,15 @@
       });
     }
 
-    // ── Product templates ──
+    // ── No projects on mobile ──
+    if (mobile && projects.length === 0) {
+      var emptyMsg = AP.ui.el('div', { class: 'empty-state' });
+      emptyMsg.innerHTML = '<div class="empty-state-icon">📱</div><p>No projects available. Create projects on desktop to browse them here.</p>';
+      wrap.appendChild(emptyMsg);
+    }
+
+    // ── Product templates (hidden on mobile) ──
+    if (!mobile) {
     var tmplLbl = AP.ui.el('p', { class: 'catalog-section-title', style: 'margin-top:' + (projects.length ? '32px' : '0') });
     tmplLbl.textContent = 'Start from a Template';
     wrap.appendChild(tmplLbl);
@@ -168,6 +184,7 @@
     });
 
     wrap.appendChild(pGrid);
+    } // end if (!mobile)
     container.appendChild(wrap);
   }
 

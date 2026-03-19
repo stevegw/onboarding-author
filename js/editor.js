@@ -16,7 +16,7 @@
     var mod   = _getMod(project);
     var topic = mod && _getTopicFrom(mod);
     if (!topic) return;
-    if (AP.preview && AP.preview.isPreview()) {
+    if (AP.ui.isMobile() || (AP.preview && AP.preview.isPreview())) {
       _renderPreview(topic, mod);
     } else {
       _render(topic, mod);
@@ -29,7 +29,7 @@
     var mod   = _getMod(project);
     var topic = mod && _getTopicFrom(mod);
     if (!topic) { showPlaceholder(); return; }
-    if (AP.preview && AP.preview.isPreview()) {
+    if (AP.ui.isMobile() || (AP.preview && AP.preview.isPreview())) {
       _renderPreview(topic, mod);
     } else {
       _render(topic, mod);
@@ -315,7 +315,7 @@
         list.appendChild(row);
       });
 
-      var addBtn = AP.ui.el('button', { class: 'btn btn-secondary btn-sm', style: 'margin-top:8px' });
+      var addBtn = AP.ui.el('button', { class: 'btn btn-secondary btn-sm takeaway-add-btn', style: 'margin-top:8px' });
       addBtn.textContent = '+ Add Takeaway';
       addBtn.onclick = function () {
         AP.state.commitChange(function (p) {
