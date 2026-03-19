@@ -20,6 +20,7 @@
       </div>
       <div class="sb-controls">
         <button class="icon-btn" id="theme-btn" title="Toggle theme">☽</button>
+        <button class="icon-btn" id="sidebar-collapse-btn" title="Collapse sidebar" style="width:24px;height:24px;font-size:11px">◀</button>
       </div>
     </div>
 
@@ -49,12 +50,14 @@
       <div class="sb-footer-note" style="margin-top:4px">v1.0 · GitHub Pages</div>
     </div>
   </aside>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
   <!-- ── Main ── -->
   <div class="main">
 
     <!-- Topbar -->
     <div class="topbar" id="topbar">
+      <button class="icon-btn mobile-menu-btn" id="mobile-menu-btn" title="Menu">☰</button>
       <div class="topbar-breadcrumb" id="topbar-breadcrumb">
         <span>Catalog</span>
       </div>
@@ -71,15 +74,17 @@
       <div class="editor-view">
 
         <!-- Left: Module Tree -->
-        <div class="editor-panel-left">
+        <div class="editor-panel-left" id="editor-panel-left">
           <div class="panel-header">
             <h3>Modules & Topics</h3>
             <div style="display:flex;gap:4px">
               <button class="icon-btn" id="collapse-all-btn" title="Collapse all" style="width:24px;height:24px;font-size:11px">−</button>
+              <button class="icon-btn" id="panel-collapse-btn" title="Collapse panel" style="width:24px;height:24px;font-size:11px">◀</button>
             </div>
           </div>
           <div class="module-tree" id="module-tree"></div>
         </div>
+        <div class="resize-handle" id="resize-handle"></div>
 
         <!-- Right: Content Editor -->
         <div class="editor-content">
@@ -160,6 +165,7 @@
   // ── Init ──
   AP.ui.initTheme();
   AP.ui.initUndoBar();
+  AP.ui.initPanelResize();
 
   // ── Theme toggle ──
   document.getElementById('theme-btn').onclick = function () {

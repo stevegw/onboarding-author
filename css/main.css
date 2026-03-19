@@ -26,8 +26,14 @@ body {
   flex-direction: column;
   flex-shrink: 0;
   z-index: 50;
-  transition: transform var(--transition);
+  transition: transform var(--transition), width 0.2s ease;
 }
+.sidebar.collapsed { width: 44px; overflow: hidden; }
+.sidebar.collapsed .sb-brand,
+.sidebar.collapsed .sb-nav,
+.sidebar.collapsed .sb-footer,
+.sidebar.collapsed #theme-btn { display: none; }
+.sidebar.collapsed .sb-header { justify-content: center; padding: 20px 10px 16px; }
 
 .sb-header {
   padding: 20px 20px 16px;
@@ -288,14 +294,21 @@ body {
 .editor-view { display: flex; flex: 1; overflow: hidden; width: 100%; }
 
 .editor-panel-left {
-  width: 260px;
+  width: var(--panel-left-w, 260px);
   border-right: 1px solid var(--border);
   background: var(--bg-surface);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
   overflow: hidden;
+  transition: width 0.2s ease;
 }
+.editor-panel-left.collapsed { width: 36px; }
+.editor-panel-left.collapsed .panel-header h3,
+.editor-panel-left.collapsed .module-tree,
+.editor-panel-left.collapsed #collapse-all-btn { display: none; }
+.editor-panel-left.collapsed .panel-header { justify-content: center; padding: 14px 6px; }
+.editor-panel-left.collapsed + .resize-handle { display: none; }
 
 .panel-header {
   padding: 14px 16px;
@@ -388,6 +401,7 @@ body {
   padding: 10px 20px;
   border-bottom: 1px solid var(--border);
   background: var(--bg-surface);
+  min-height: 42px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -712,12 +726,61 @@ body {
 .dragging-module .module-header { border: 1px dashed var(--accent); border-radius: var(--radius-sm); }
 .drop-target-highlight { background: var(--accent-dim) !important; border-color: var(--accent) !important; }
 
+/* ── Mobile menu button (hidden on desktop) ── */
+.mobile-menu-btn { display: none; }
+
+/* ── Sidebar overlay ── */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 199;
+}
+.sidebar-overlay.visible { display: block; }
+
 /* ── Responsive ── */
 @media (max-width: 860px) {
-  .sidebar { position: absolute; top: 0; bottom: 0; left: 0; z-index: 200; transform: translateX(-100%); }
+  .mobile-menu-btn { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sidebar {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 200;
+    transform: translateX(-100%);
+    width: var(--sidebar-w);
+    transition: transform 0.2s ease;
+  }
+  .sidebar.collapsed { width: var(--sidebar-w); transform: translateX(-100%); }
   .sidebar.open { transform: none; box-shadow: var(--shadow-lg); }
+  .sidebar.open.collapsed { width: var(--sidebar-w); }
+  .sidebar.open .sb-brand,
+  .sidebar.open .sb-nav,
+  .sidebar.open .sb-footer,
+  .sidebar.open #theme-btn { display: revert; }
+  .sidebar.open .sb-header { justify-content: space-between; padding: 20px 20px 16px; }
+  #sidebar-collapse-btn { display: none; }
   .catalog-view { padding: 20px; }
   .editor-panel-left { width: 220px; }
+  .resize-handle { display: none; }
+}
+
+@media (max-width: 600px) {
+  .editor-view { flex-direction: column; }
+  .editor-panel-left {
+    width: 100% !important;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    max-height: 40vh;
+    transition: max-height 0.2s ease;
+  }
+  .editor-panel-left.collapsed {
+    width: 100% !important;
+    max-height: 36px;
+    border-bottom: 1px solid var(--border);
+  }
+  .editor-panel-left.collapsed + .resize-handle { display: none; }
+  .editor-toolbar { padding: 8px 12px; }
+  .editor-toolbar .toolbar-sep { display: none; }
+  .editor-body { padding: 16px; }
+  .topbar { padding: 0 12px; }
 }
 
 /* ── Animations ── */
@@ -846,8 +909,17 @@ body {
   background: transparent;
   flex-shrink: 0;
   transition: background var(--transition);
+  position: relative;
 }
-.resize-handle:hover { background: var(--accent); }
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: -3px;
+  width: 10px;
+}
+.resize-handle:hover,
+.resize-handle.dragging { background: var(--accent); }
 
 /* ── Topic fill indicator in tree ── */
 .topic-fill-dot {
