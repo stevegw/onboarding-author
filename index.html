@@ -92,6 +92,8 @@
               <span class="toolbar-title" id="toolbar-title" style="font-weight:400;color:var(--text-muted)"></span>
             </div>
             <div style="display:flex;gap:6px;align-items:center">
+              <button class="btn btn-sm mode-toggle mode-author" id="mode-toggle-btn" title="Switch to Preview mode">👁 Preview</button>
+              <span class="toolbar-sep"></span>
               <button class="btn btn-secondary btn-sm" id="export-ob-btn" title="Export OB-compatible ZIP">⬇ Export</button>
               <button class="btn btn-secondary btn-sm" id="save-raw-btn" title="Save raw project JSON">💾 Save JSON</button>
             </div>
@@ -144,6 +146,7 @@
 <script src="js/catalog.js"></script>
 <script src="js/catalog-view.js"></script>
 <script src="js/blocks.js"></script>
+<script src="js/preview.js"></script>
 <script src="js/tree.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/export.js"></script>
@@ -221,6 +224,12 @@
       p
     );
     AP.ui.toast('Raw JSON downloaded', 'success');
+  };
+
+  // ── Mode toggle ──
+  document.getElementById('mode-toggle-btn').onclick = function () {
+    var mode = AP.editor.toggleMode();
+    AP.ui.toast(mode === 'preview' ? 'Preview mode' : 'Author mode', 'info');
   };
 
   // ── Collapse all modules ──

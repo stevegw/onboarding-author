@@ -16,7 +16,11 @@
     var mod   = _getMod(project);
     var topic = mod && _getTopicFrom(mod);
     if (!topic) return;
-    _render(topic, mod);
+    if (AP.preview && AP.preview.isPreview()) {
+      _renderPreview(topic, mod);
+    } else {
+      _render(topic, mod);
+    }
     _updateBreadcrumb(mod.title, topic.title);
   }
 
@@ -25,8 +29,65 @@
     var mod   = _getMod(project);
     var topic = mod && _getTopicFrom(mod);
     if (!topic) { showPlaceholder(); return; }
-    _render(topic, mod);
+    if (AP.preview && AP.preview.isPreview()) {
+      _renderPreview(topic, mod);
+    } else {
+      _render(topic, mod);
+    }
     _updateBreadcrumb(mod.title, topic.title);
+  }
+
+  function toggleMode() {
+    if (!AP.preview) return;
+    var newMode = AP.preview.isPreview() ? 'author' : 'preview';
+    AP.preview.setMode(newMode);
+    _updateToggleButton();
+    // Re-render current topic in new mode
+    if (_topicId && _moduleId) {
+      var project = AP.state.getCurrentProject();
+      if (project) {
+        var mod = _getMod(project);
+        var topic = mod && _getTopicFrom(mod);
+        if (topic) {
+          if (newMode === 'preview') {
+            _renderPreview(topic, mod);
+          } else {
+            _render(topic, mod);
+          }
+        }
+      }
+    }
+    return newMode;
+  }
+
+  function _updateToggleButton() {
+    var btn = AP.ui.qs('#mode-toggle-btn');
+    if (!btn) return;
+    var isPrev = AP.preview && AP.preview.isPreview();
+    btn.textContent = isPrev ? '✎ Author' : '👁 Preview';
+    btn.title = isPrev ? 'Switch to Author mode' : 'Switch to Preview mode';
+    if (isPrev) {
+      btn.classList.add('mode-preview');
+      btn.classList.remove('mode-author');
+    } else {
+      btn.classList.add('mode-author');
+      btn.classList.remove('mode-preview');
+    }
+  }
+
+  function _renderPreview(topic, mod) {
+    var body = AP.ui.qs('#editor-body');
+    if (!body) return;
+    body.innerHTML = '';
+
+    var tt = AP.ui.qs('#toolbar-title');
+    if (tt) tt.textContent = topic.title || 'Untitled topic';
+
+    var previewWrap = AP.ui.el('div', { class: 'preview-wrap' });
+    previewWrap.innerHTML = AP.preview.renderTopic(topic, mod);
+    body.appendChild(previewWrap);
+
+    AP.preview.bindPreviewInteractions(body);
   }
 
   function showPlaceholder() {
@@ -281,6 +342,7 @@
   AP.editor = {
     loadTopic: loadTopic,
     reload: reload,
-    showPlaceholder: showPlaceholder
+    showPlaceholder: showPlaceholder,
+    toggleMode: toggleMode
   };
 })();
