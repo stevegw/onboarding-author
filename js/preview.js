@@ -89,6 +89,7 @@
       case 'interactive-sort':  return _sort(block);
       case 'image':      return _image(block);
       case 'exercise':   return _exercise(block);
+      case 'knowledge-check': return _knowledgeCheck(block);
       default: return '';
     }
   }
@@ -249,12 +250,58 @@
     return html;
   }
 
+  function _knowledgeCheck(block) {
+    var questions = block.questions || [];
+    if (!questions.length) return '<p class="preview-empty">No quiz questions</p>';
+    var html = '<div class="preview-knowledge-check">';
+    html += '<h3 class="preview-kc-title">Knowledge Check</h3>';
+    questions.forEach(function (q, qi) {
+      html += '<div class="preview-kc-question" data-kc-q="' + qi + '">';
+      html += '<p class="preview-kc-q-text"><strong>Q' + (qi + 1) + '.</strong> ' + safeHtml(q.question) + '</p>';
+      html += '<div class="preview-kc-options">';
+      (q.options || []).forEach(function (opt, oi) {
+        html += '<div class="preview-kc-option" data-kc-opt="' + oi + '" data-kc-correct="' + (oi === q.answerIndex) + '">';
+        html += '<span class="preview-kc-radio"></span>';
+        html += '<span>' + safeHtml(opt) + '</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+      if (q.rationale) {
+        html += '<div class="preview-kc-rationale">' + safeHtml(q.rationale) + '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
   // ── Bind interactive elements in preview ──
   function bindPreviewInteractions(container) {
     // Reveal cards: click to flip
     container.querySelectorAll('.preview-reveal-card').forEach(function (card) {
       card.addEventListener('click', function () {
         card.classList.toggle('flipped');
+      });
+    });
+
+    // Knowledge check: click option to answer
+    container.querySelectorAll('.preview-kc-question').forEach(function (qEl) {
+      var answered = false;
+      qEl.querySelectorAll('.preview-kc-option').forEach(function (optEl) {
+        optEl.addEventListener('click', function () {
+          if (answered) return;
+          answered = true;
+          var isCorrect = optEl.getAttribute('data-kc-correct') === 'true';
+          optEl.classList.add(isCorrect ? 'kc-correct' : 'kc-incorrect');
+          // Highlight the correct answer
+          qEl.querySelectorAll('.preview-kc-option').forEach(function (o) {
+            if (o.getAttribute('data-kc-correct') === 'true') o.classList.add('kc-correct');
+          });
+          // Show rationale
+          var rat = qEl.querySelector('.preview-kc-rationale');
+          if (rat) rat.classList.add('kc-visible');
+          qEl.classList.add('kc-answered');
+        });
       });
     });
   }

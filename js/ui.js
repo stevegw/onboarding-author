@@ -46,7 +46,7 @@
     return _toastContainer;
   }
 
-  function toast(msg, type, duration) {
+  function toast(msg, type, duration, onUndo) {
     var container = getToastContainer();
     if (!container) return;
     type = type || 'info';
@@ -55,12 +55,36 @@
     var icons = { success: '✓', error: '✕', info: 'ℹ', warning: '⚠' };
     var t = el('div', { class: 'toast toast-' + type });
     t.innerHTML = '<span>' + icons[type] + '</span> ' + escapeHtml(msg);
+
+    if (onUndo) {
+      var undoBtn = el('button', { class: 'toast-undo-btn' });
+      undoBtn.textContent = 'Undo';
+      undoBtn.onclick = function () {
+        t.classList.add('hiding');
+        setTimeout(function () { t.remove(); }, 250);
+        onUndo();
+      };
+      t.appendChild(undoBtn);
+      duration = Math.max(duration, 5000); // give more time when undo available
+    }
+
     container.appendChild(t);
 
-    setTimeout(function () {
+    var timer = setTimeout(function () {
       t.classList.add('hiding');
       setTimeout(function () { t.remove(); }, 250);
     }, duration);
+
+    // Hovering pauses the auto-dismiss when undo is available
+    if (onUndo) {
+      t.addEventListener('mouseenter', function () { clearTimeout(timer); });
+      t.addEventListener('mouseleave', function () {
+        timer = setTimeout(function () {
+          t.classList.add('hiding');
+          setTimeout(function () { t.remove(); }, 250);
+        }, 2000);
+      });
+    }
   }
 
   // ── Modal ──
@@ -118,15 +142,49 @@
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
   }
 
-  // ── Undo Bar ──
+  // ── Undo system ──
   var _undoBar;
+  var _suppressUndoBar = false;
+
+  // Central undo/redo functions — used by toast buttons, bar buttons, and Ctrl+Z/Y
+  function performUndo() {
+    var restored = AP.state.undo();
+    if (!restored) return false;
+    _suppressUndoBar = true;
+    AP.editor.reload(restored);
+    AP.tree.render(restored);
+    _suppressUndoBar = false;
+    _updateUndoBar();
+    return true;
+  }
+
+  function performRedo() {
+    var restored = AP.state.redo();
+    if (!restored) return false;
+    _suppressUndoBar = true;
+    AP.editor.reload(restored);
+    AP.tree.render(restored);
+    _suppressUndoBar = false;
+    _updateUndoBar();
+    return true;
+  }
+
+  function _updateUndoBar() {
+    if (!_undoBar) return;
+    _undoBar.querySelector('#undo-count').textContent = AP.state.canUndo() ? '↩' : '';
+    var undoBtn = _undoBar.querySelector('#undo-btn');
+    var redoBtn = _undoBar.querySelector('#redo-btn');
+    if (undoBtn) undoBtn.disabled = !AP.state.canUndo();
+    if (redoBtn) redoBtn.disabled = !AP.state.canRedo();
+  }
+
   function initUndoBar() {
     _undoBar = document.getElementById('undo-bar');
     var undoTimer;
 
     AP.state.onUndoChange(function (canUndo, canRedo, histLen) {
-      if (!_undoBar) return;
-      _undoBar.querySelector('#undo-count').textContent = histLen + '/' + 10;
+      if (!_undoBar || _suppressUndoBar) return;
+      _updateUndoBar();
 
       clearTimeout(undoTimer);
       if (canUndo) {
@@ -140,19 +198,33 @@
     });
 
     qs('#undo-btn').onclick = function () {
-      var restored = AP.state.undo();
-      if (restored) {
-        AP.editor.reload(restored);
-        toast('Undone', 'info');
-      }
+      if (performUndo()) toast('Undone', 'info');
     };
     qs('#redo-btn').onclick = function () {
-      var restored = AP.state.redo();
-      if (restored) {
-        AP.editor.reload(restored);
-        toast('Redone', 'info');
-      }
+      if (performRedo()) toast('Redone', 'info');
     };
+
+    // Auto-show toast with undo button on structural changes
+    var _labelMap = {
+      'add-module': 'Module added', 'rename-module': 'Module renamed',
+      'add-topic': 'Topic added', 'delete-module': 'Module deleted',
+      'delete-topic': 'Topic deleted', 'reorder-module': 'Module reordered',
+      'reorder-topic': 'Topic reordered', 'add-block': 'Block added',
+      'delete-block': 'Block deleted', 'move-block-up': 'Block moved',
+      'move-block-down': 'Block moved', 'add-takeaway': 'Takeaway added',
+      'delete-takeaway': 'Takeaway deleted', 'toggle-exercise': 'Exercise toggled',
+      'edit-title': 'Title updated', 'edit-minutes': 'Minutes updated',
+      'edit-module-desc': 'Description updated', 'rename': 'Project renamed',
+      'edit-content': 'Content updated', 'edit-takeaway': 'Takeaway updated'
+    };
+    // Quiet labels: frequent text edits — undo bar only, no toast
+    var _quietLabels = { 'edit-content': 1, 'edit-takeaway': 1, 'edit-title': 1, 'edit-minutes': 1, 'edit-module-desc': 1 };
+
+    AP.state.onCommit(function (label) {
+      if (_quietLabels[label]) return;
+      var msg = _labelMap[label] || 'Change recorded';
+      toastUndo(msg);
+    });
   }
 
   // ── Panel Resize ──
@@ -200,58 +272,12 @@
       });
     }
 
-    // ── Module tree panel collapse + resize ──
-    var panel = document.getElementById('editor-panel-left');
-    var handle = document.getElementById('resize-handle');
-    var btn = document.getElementById('panel-collapse-btn');
-    if (!panel || !handle || !btn) return;
-
-    var LS_COLLAPSED = 'ap_panel_collapsed';
-    var LS_WIDTH = 'ap_panel_width';
-    var MIN_W = 180;
-    var MAX_W = 500;
-
-    // Restore saved state
-    var savedWidth = localStorage.getItem(LS_WIDTH);
-    if (savedWidth) panel.style.setProperty('--panel-left-w', savedWidth + 'px');
-
-    if (localStorage.getItem(LS_COLLAPSED) === '1') {
-      panel.classList.add('collapsed');
-      btn.textContent = '▶';
+    // ── Sidebar resize (restore saved width) ──
+    var LS_SB_WIDTH = 'ap_sidebar_width';
+    var savedSbWidth = localStorage.getItem(LS_SB_WIDTH);
+    if (savedSbWidth && sidebar) {
+      sidebar.style.width = savedSbWidth + 'px';
     }
-
-    // Collapse toggle
-    btn.onclick = function () {
-      var collapsed = panel.classList.toggle('collapsed');
-      btn.textContent = collapsed ? '▶' : '◀';
-      localStorage.setItem(LS_COLLAPSED, collapsed ? '1' : '0');
-    };
-
-    // Drag resize
-    handle.addEventListener('mousedown', function (e) {
-      e.preventDefault();
-      handle.classList.add('dragging');
-      panel.style.transition = 'none';
-
-      var onMove = function (e) {
-        var rect = panel.getBoundingClientRect();
-        var w = e.clientX - rect.left;
-        w = Math.max(MIN_W, Math.min(MAX_W, w));
-        panel.style.setProperty('--panel-left-w', w + 'px');
-      };
-
-      var onUp = function () {
-        document.removeEventListener('mousemove', onMove);
-        document.removeEventListener('mouseup', onUp);
-        handle.classList.remove('dragging');
-        panel.style.transition = '';
-        var finalW = parseInt(getComputedStyle(panel).width, 10);
-        localStorage.setItem(LS_WIDTH, finalW);
-      };
-
-      document.addEventListener('mousemove', onMove);
-      document.addEventListener('mouseup', onUp);
-    });
   }
 
   // ── Export helpers ──
@@ -274,16 +300,26 @@
     return window.innerWidth <= 860;
   }
 
+  // Toast with undo button
+  function toastUndo(msg) {
+    toast(msg, 'success', 5000, function () {
+      performUndo();
+    });
+  }
+
   AP.ui = {
     qs: qs, qsa: qsa, el: el,
     escapeHtml: escapeHtml,
     initTheme: initTheme,
     toggleTheme: toggleTheme,
     toast: toast,
+    toastUndo: toastUndo,
     confirm: confirm,
     prompt: prompt,
     initUndoBar: initUndoBar,
     initPanelResize: initPanelResize,
+    performUndo: performUndo,
+    performRedo: performRedo,
     downloadJson: downloadJson,
     formatDate: formatDate,
     isMobile: isMobile

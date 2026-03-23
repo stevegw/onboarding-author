@@ -24,26 +24,52 @@
       </div>
     </div>
 
-    <nav class="sb-nav">
-      <div class="sb-nav-label">Workspace</div>
-      <div class="sb-nav-item active" data-nav="catalog" id="nav-catalog">
-        <span class="nav-icon">🏠</span>
-        <span class="nav-label">Catalog</span>
-      </div>
+    <!-- Catalog-mode sidebar content -->
+    <div class="sb-mode sb-catalog-mode" id="sb-catalog-mode">
+      <nav class="sb-nav">
+        <div class="sb-nav-label">Product Families</div>
+        <div id="sb-families"><!-- rendered by catalog-view.js --></div>
 
-      <div class="sb-nav-label" style="margin-top:8px">Import</div>
-      <div class="sb-nav-item" id="nav-import">
-        <span class="nav-icon">⬆</span>
-        <span class="nav-label">Import Project JSON</span>
-      </div>
-      <input type="file" id="import-file" accept=".json" style="display:none">
+        <div class="sb-nav-label" style="margin-top:12px">Actions</div>
+        <div class="sb-nav-item" id="nav-import">
+          <span class="nav-icon">⬆</span>
+          <span class="nav-label">Import Project</span>
+        </div>
+        <input type="file" id="import-file" accept=".json,.zip" style="display:none">
+        <div class="sb-nav-item" id="nav-schema">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Block Schema Reference</span>
+        </div>
+      </nav>
+    </div>
 
-      <div class="sb-nav-label" style="margin-top:8px">Resources</div>
-      <div class="sb-nav-item" id="nav-schema">
-        <span class="nav-icon">📋</span>
-        <span class="nav-label">Block Schema Reference</span>
+    <!-- Editor-mode sidebar content -->
+    <div class="sb-mode sb-editor-mode" id="sb-editor-mode" style="display:none">
+      <div class="sb-back-link" id="sb-back-catalog">
+        <span>←</span> <span>All Projects</span>
       </div>
-    </nav>
+      <div class="sb-project-header" id="sb-project-header"></div>
+      <div class="sb-tree-header">
+        <span class="sb-tree-label">Modules & Topics</span>
+        <button class="icon-btn" id="collapse-all-btn" title="Collapse all" style="width:22px;height:22px;font-size:10px">−</button>
+      </div>
+      <div class="module-tree" id="sidebar-tree"><!-- rendered by tree.js --></div>
+      <div class="sb-editor-actions" id="sb-editor-actions">
+        <button class="btn btn-primary btn-sm" id="publish-btn" title="Publish for viewing" style="flex:1">Publish</button>
+        <button class="btn btn-secondary btn-sm" id="export-ob-btn" title="Export OB-compatible ZIP" style="flex:1">⬇ Export</button>
+      </div>
+    </div>
+
+    <!-- Narration bar -->
+    <div class="narr-bar" id="narr-bar">
+      <button class="narr-btn narr-toggle-btn" id="narr-toggle" title="Enable click-to-narrate">🔇</button>
+      <div class="narr-divider"></div>
+      <button class="narr-btn" id="narr-play" title="Play from here">▶</button>
+      <button class="narr-btn" id="narr-stop" title="Stop">■</button>
+      <div class="narr-divider"></div>
+      <select class="narr-select" id="narr-voice" title="Voice"></select>
+      <select class="narr-select" id="narr-rate" title="Speed"></select>
+    </div>
 
     <div class="sb-footer">
       <div class="sb-footer-note">Outputs OB-compatible JSON</div>
@@ -72,21 +98,7 @@
     <!-- ── Editor View ── -->
     <div class="view" id="view-editor">
       <div class="editor-view">
-
-        <!-- Left: Module Tree -->
-        <div class="editor-panel-left" id="editor-panel-left">
-          <div class="panel-header">
-            <h3>Modules & Topics</h3>
-            <div style="display:flex;gap:4px">
-              <button class="icon-btn" id="collapse-all-btn" title="Collapse all" style="width:24px;height:24px;font-size:11px">−</button>
-              <button class="icon-btn" id="panel-collapse-btn" title="Collapse panel" style="width:24px;height:24px;font-size:11px">◀</button>
-            </div>
-          </div>
-          <div class="module-tree" id="module-tree"></div>
-        </div>
-        <div class="resize-handle" id="resize-handle"></div>
-
-        <!-- Right: Content Editor -->
+        <!-- Content Editor (tree is now in sidebar) -->
         <div class="editor-content">
           <!-- Toolbar -->
           <div class="editor-toolbar">
@@ -98,9 +110,8 @@
             </div>
             <div style="display:flex;gap:6px;align-items:center">
               <button class="btn btn-sm mode-toggle mode-author" id="mode-toggle-btn" title="Switch to Preview mode">👁 Preview</button>
-              <span class="toolbar-sep"></span>
-              <button class="btn btn-secondary btn-sm" id="export-ob-btn" title="Export OB-compatible ZIP">⬇ Export</button>
               <button class="btn btn-secondary btn-sm" id="save-raw-btn" title="Save raw project JSON">💾 Save JSON</button>
+              <button class="btn btn-secondary btn-sm" id="pwa-export-btn" title="Export as installable PWA">📦 PWA</button>
             </div>
           </div>
 
@@ -155,6 +166,8 @@
 <script src="js/tree.js"></script>
 <script src="js/editor.js"></script>
 <script src="js/export.js"></script>
+<script src="js/pwa-export.js"></script>
+<script src="js/publish.js"></script>
 <script src="js/narration.js"></script>
 <script src="js/router.js"></script>
 
@@ -173,8 +186,8 @@
     this.textContent = t === 'dark' ? '☽' : '☀';
   };
 
-  // ── Sidebar navigation ──
-  document.getElementById('nav-catalog').onclick = function () {
+  // ── Sidebar: back to catalog ──
+  document.getElementById('sb-back-catalog').onclick = function () {
     AP.router.go('catalog');
   };
 
@@ -217,11 +230,13 @@
     if (e.target === this) document.getElementById('schema-modal').style.display = 'none';
   };
 
-  // ── Editor toolbar buttons ──
+  // ── Editor action buttons (sidebar + toolbar) ──
+  document.getElementById('publish-btn').onclick = function () {
+    AP.publish.publishProject();
+  };
   document.getElementById('export-ob-btn').onclick = function () {
     AP.exportMgr.exportProject();
   };
-
   document.getElementById('save-raw-btn').onclick = function () {
     var p = AP.state.getCurrentProject();
     if (!p) { AP.ui.toast('No project open', 'error'); return; }
@@ -231,6 +246,11 @@
     );
     AP.ui.toast('Raw JSON downloaded', 'success');
   };
+  document.getElementById('pwa-export-btn').onclick = function () {
+    var p = AP.state.getCurrentProject();
+    if (!p) { AP.ui.toast('No project open', 'error'); return; }
+    AP.pwaExport.exportPWA(p);
+  };
 
   // ── Mode toggle ──
   document.getElementById('mode-toggle-btn').onclick = function () {
@@ -238,10 +258,12 @@
     AP.ui.toast(mode === 'preview' ? 'Preview mode' : 'Author mode', 'info');
   };
 
-  // ── Collapse all modules ──
+  // ── Collapse all modules in sidebar tree ──
   document.getElementById('collapse-all-btn').onclick = function () {
-    document.querySelectorAll('.topic-list.open').forEach(function (l) { l.classList.remove('open'); });
-    document.querySelectorAll('.module-header.expanded').forEach(function (h) { h.classList.remove('expanded'); });
+    var tree = document.getElementById('sidebar-tree');
+    if (!tree) return;
+    tree.querySelectorAll('.topic-list.open').forEach(function (l) { l.classList.remove('open'); });
+    tree.querySelectorAll('.module-header.expanded').forEach(function (h) { h.classList.remove('expanded'); });
   };
 
   // ── Keyboard shortcuts ──
@@ -249,19 +271,19 @@
     var isCtrl = e.ctrlKey || e.metaKey;
     if (isCtrl && e.key === 'z' && !e.shiftKey) {
       e.preventDefault();
-      var r = AP.state.undo();
-      if (r) { AP.editor.reload(r); AP.ui.toast('Undone', 'info'); }
+      AP.ui.performUndo();
     }
     if (isCtrl && (e.key === 'y' || (e.key === 'z' && e.shiftKey))) {
       e.preventDefault();
-      var r = AP.state.redo();
-      if (r) { AP.editor.reload(r); AP.ui.toast('Redone', 'info'); }
+      AP.ui.performRedo();
     }
   });
 
-  // ── Start ──
-  AP.router.go('catalog');
-  if (AP.narration.isSupported()) AP.narration.init();
+  // ── Start: sync projects from server, then render ──
+  AP.state.syncFromServer(function () {
+    AP.router.go('catalog');
+    if (AP.narration.isSupported()) AP.narration.init();
+  });
 })();
 </script>
 </body>

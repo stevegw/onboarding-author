@@ -13,7 +13,8 @@
     { type: 'interactive-match',label: '⇌ Match',           icon: '⇌' },
     { type: 'interactive-sort', label: '↕ Sort',            icon: '↕' },
     { type: 'image',            label: '🖼 Image',          icon: '🖼' },
-    { type: 'exercise',         label: '🔧 Exercise',       icon: '🔧' }
+    { type: 'exercise',         label: '🔧 Exercise',       icon: '🔧' },
+    { type: 'knowledge-check',  label: '✓ Knowledge Check', icon: '✓' }
   ];
 
   // Build a default block object for a given type
@@ -27,7 +28,8 @@
       'interactive-match': { type: 'interactive-match', prompt: '', pairs: [{ left: '', right: '' }] },
       'interactive-sort':  { type: 'interactive-sort', prompt: '', items: ['', '', ''] },
       'image':             { type: 'image', src: '', alt: '', caption: '', size: 'medium' },
-      'exercise':          { type: 'exercise', exerciseId: '', title: '', objective: '', tasks: [{ id: 'task1', title: '', steps: [{ action: '', detail: '', hint: null }] }] }
+      'exercise':          { type: 'exercise', exerciseId: '', title: '', objective: '', tasks: [{ id: 'task1', title: '', steps: [{ action: '', detail: '', hint: null }] }] },
+      'knowledge-check':  { type: 'knowledge-check', questions: [{ id: 'kc-001', question: '', options: ['', '', '', ''], answerIndex: 0, rationale: '', topic: '' }] }
     };
     return ts[type] || { type: type };
   }
@@ -43,6 +45,7 @@
     else if (block.type === 'callout') badgeClass += ' type-callout';
     else if (block.type === 'image') badgeClass += ' type-image';
     else if (block.type === 'exercise') badgeClass += ' type-exercise';
+    else if (block.type === 'knowledge-check') badgeClass += ' type-knowledge-check';
 
     // Header
     var header = AP.ui.el('div', { class: 'block-header' });
@@ -82,6 +85,7 @@
       case 'interactive-sort': return _sortEditor(block, onChange);
       case 'image': return _imageEditor(block, onChange);
       case 'exercise': return _exerciseEditor(block, onChange);
+      case 'knowledge-check': return _knowledgeCheckEditor(block, onChange);
       default:
         var d = document.createElement('div');
         d.style.color = 'var(--text-dim)';
@@ -549,6 +553,111 @@
     }
 
     rebuildTasks();
+    return container;
+  }
+
+  // ── Knowledge Check (quiz questions) editor ──
+  function _knowledgeCheckEditor(block, onChange) {
+    if (!block.questions) block.questions = [];
+    var container = AP.ui.el('div', { class: 'knowledge-check-editor' });
+
+    function rebuildQuestions() {
+      var existing = container.querySelector('.kc-questions');
+      if (existing) existing.remove();
+      var questionsEl = AP.ui.el('div', { class: 'kc-questions' });
+
+      block.questions.forEach(function (q, qi) {
+        var qEl = AP.ui.el('div', { style: 'border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px' });
+
+        // Question header
+        var qHdr = AP.ui.el('div', { style: 'display:flex;align-items:center;gap:8px;margin-bottom:8px' });
+        var qLbl = AP.ui.el('span', { style: 'font-size:11px;font-weight:600;color:var(--text-dim)' });
+        qLbl.textContent = 'Q' + (qi + 1);
+        var qDel = AP.ui.el('button', { class: 'btn btn-danger btn-xs' });
+        qDel.textContent = '✕ Remove';
+        qDel.onclick = function () { block.questions.splice(qi, 1); if (onChange) onChange(); rebuildQuestions(); };
+        qHdr.appendChild(qLbl); qHdr.appendChild(qDel);
+        qEl.appendChild(qHdr);
+
+        // Question text
+        var qTa = document.createElement('textarea');
+        qTa.className = 'block-textarea';
+        qTa.placeholder = 'Question text';
+        qTa.value = q.question || '';
+        qTa.rows = 2;
+        qTa.style.marginBottom = '8px';
+        qTa.oninput = function () { q.question = qTa.value; if (onChange) onChange(); };
+        qEl.appendChild(qTa);
+
+        // Options
+        var optLbl = AP.ui.el('p', { style: 'font-size:10px;color:var(--text-dim);margin-bottom:4px' });
+        optLbl.textContent = 'Options (select the correct answer):';
+        qEl.appendChild(optLbl);
+
+        if (!q.options) q.options = ['', '', '', ''];
+
+        q.options.forEach(function (opt, oi) {
+          var optRow = AP.ui.el('div', { style: 'display:flex;align-items:center;gap:6px;margin-bottom:4px' });
+
+          var radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = 'kc-q' + qi + '-answer';
+          radio.checked = (q.answerIndex === oi);
+          radio.title = 'Mark as correct answer';
+          radio.onchange = function () { q.answerIndex = oi; if (onChange) onChange(); };
+
+          var optInp = document.createElement('input');
+          optInp.className = 'block-input';
+          optInp.placeholder = 'Option ' + (oi + 1);
+          optInp.value = opt;
+          optInp.style.flex = '1';
+          optInp.oninput = function () { q.options[oi] = optInp.value; if (onChange) onChange(); };
+
+          var optDel = AP.ui.el('button', { class: 'btn btn-danger btn-xs', style: 'padding:2px 6px' });
+          optDel.textContent = '✕';
+          optDel.onclick = function () {
+            q.options.splice(oi, 1);
+            if (q.answerIndex >= q.options.length) q.answerIndex = 0;
+            if (onChange) onChange(); rebuildQuestions();
+          };
+
+          optRow.appendChild(radio); optRow.appendChild(optInp); optRow.appendChild(optDel);
+          qEl.appendChild(optRow);
+        });
+
+        var addOptBtn = AP.ui.el('button', { class: 'btn btn-secondary btn-xs', style: 'margin:4px 0 8px' });
+        addOptBtn.textContent = '+ Add Option';
+        addOptBtn.onclick = function () { q.options.push(''); if (onChange) onChange(); rebuildQuestions(); };
+        qEl.appendChild(addOptBtn);
+
+        // Rationale
+        var ratLbl = AP.ui.el('p', { style: 'font-size:10px;color:var(--text-dim);margin-bottom:4px' });
+        ratLbl.textContent = 'Rationale (shown after answering):';
+        qEl.appendChild(ratLbl);
+
+        var ratTa = document.createElement('textarea');
+        ratTa.className = 'block-textarea';
+        ratTa.placeholder = 'Explain why the correct answer is correct';
+        ratTa.value = q.rationale || '';
+        ratTa.rows = 2;
+        ratTa.oninput = function () { q.rationale = ratTa.value; if (onChange) onChange(); };
+        qEl.appendChild(ratTa);
+
+        questionsEl.appendChild(qEl);
+      });
+
+      var addQBtn = AP.ui.el('button', { class: 'btn btn-secondary btn-sm' });
+      addQBtn.textContent = '+ Add Question';
+      addQBtn.onclick = function () {
+        var n = block.questions.length + 1;
+        block.questions.push({ id: 'kc-' + String(n).padStart(3, '0'), question: '', options: ['', '', '', ''], answerIndex: 0, rationale: '', topic: '' });
+        if (onChange) onChange(); rebuildQuestions();
+      };
+      questionsEl.appendChild(addQBtn);
+      container.appendChild(questionsEl);
+    }
+
+    rebuildQuestions();
     return container;
   }
 

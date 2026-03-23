@@ -57,6 +57,8 @@
         }
       }
     }
+    // Show/hide narration bar + click handler
+    if (AP.narration && AP.narration.onModeChange) AP.narration.onModeChange();
     return newMode;
   }
 
@@ -88,6 +90,9 @@
     body.appendChild(previewWrap);
 
     AP.preview.bindPreviewInteractions(body);
+
+    // Re-setup narration click handler after content change
+    if (AP.narration && AP.narration.setupClickHandler) AP.narration.setupClickHandler();
   }
 
   function showPlaceholder() {
@@ -97,7 +102,7 @@
       '<div class="editor-placeholder">',
         '<div class="editor-placeholder-icon">📄</div>',
         '<h3>Select a topic to edit</h3>',
-        '<p>Choose a topic from the module tree on the left, or add a new one.</p>',
+        '<p>Choose a topic from the sidebar tree, or add a new one.</p>',
       '</div>'
     ].join('');
     _updateBreadcrumb('', '');
@@ -145,14 +150,12 @@
     var titleInp = AP.ui.el('input', { class: 'topic-title-input', type: 'text', placeholder: 'Topic title' });
     titleInp.value = topic.title || '';
     titleInp.oninput = function () {
-      topic.title = titleInp.value; // mutate in-place immediately
+      AP.state.snapshotBeforeEdit();
+      topic.title = titleInp.value;
       var tt2 = AP.ui.qs('#toolbar-title');
       if (tt2) tt2.textContent = titleInp.value;
       _debounceSave(function () {
-        AP.state.commitChange(function (p) {
-          var t = _getTopic(p);
-          if (t) t.title = titleInp.value;
-        }, 'edit-title');
+        AP.state.persistOnly();
         AP.tree.render(AP.state.getCurrentProject());
       });
     };
@@ -164,14 +167,9 @@
     var minsInp = AP.ui.el('input', { class: 'meta-input', type: 'number', min: '0', max: '120' });
     minsInp.value = topic.estimatedMinutes || 0;
     minsInp.oninput = function () {
-      var v = parseInt(minsInp.value) || 0;
-      topic.estimatedMinutes = v;
-      _debounceSave(function () {
-        AP.state.commitChange(function (p) {
-          var t = _getTopic(p);
-          if (t) t.estimatedMinutes = v;
-        }, 'edit-minutes');
-      });
+      AP.state.snapshotBeforeEdit();
+      topic.estimatedMinutes = parseInt(minsInp.value) || 0;
+      _debounceSave(function () { AP.state.persistOnly(); });
     };
     minsField.appendChild(minsLbl);
     minsField.appendChild(minsInp);
@@ -208,13 +206,9 @@
     descTa.value = mod.description || '';
     descTa.rows = 2;
     descTa.oninput = function () {
+      AP.state.snapshotBeforeEdit();
       mod.description = descTa.value;
-      _debounceSave(function () {
-        AP.state.commitChange(function (p) {
-          var m = _getMod(p);
-          if (m) m.description = descTa.value;
-        }, 'edit-module-desc');
-      });
+      _debounceSave(function () { AP.state.persistOnly(); });
     };
     descSect.appendChild(descLbl);
     descSect.appendChild(descTa);
@@ -238,7 +232,7 @@
         t.content.push(AP.blocks.defaultBlock(type));
       }, 'add-block');
       loadTopic(_topicId, _moduleId);
-      AP.ui.toast('Block added', 'success');
+      // toast with undo shown automatically via state.onCommit
     }));
 
     // ── Key Takeaways ──
@@ -253,8 +247,11 @@
     blocks.forEach(function (block, idx) {
       var wrap = AP.blocks.renderBlock(
         block, idx,
-        // onChange — persist without new undo entry (text is already snapshotted on block add)
-        function () { _debounceSave(function () { AP.state.persistOnly(); }); },
+        // onChange — snapshot pre-edit state on first change, then debounce persist
+        function () {
+          AP.state.snapshotBeforeEdit();
+          _debounceSave(function () { AP.state.persistOnly(); });
+        },
         // onDelete
         function (i) {
           AP.state.commitChange(function (p) {
@@ -298,6 +295,7 @@
         inp.value = tk;
         inp.oninput = function () {
           takeaways[i] = inp.value;
+          AP.state.snapshotBeforeEdit();
           _debounceSave(function () { AP.state.persistOnly(); });
         };
         var del = AP.ui.el('button', { class: 'btn btn-danger btn-xs takeaway-remove' });

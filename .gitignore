@@ -1,0 +1,6 @@
+cert.pem
+key.pem
+.cert-installed
+_openssl.cnf
+__pycache__/
+projects/

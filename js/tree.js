@@ -9,7 +9,7 @@
 
   function renderTree(project) {
     _project = project;
-    var tree = AP.ui.qs('#module-tree');
+    var tree = AP.ui.qs('#sidebar-tree');
     if (!tree) return;
     tree.innerHTML = '';
 
@@ -34,7 +34,7 @@
           });
         }, 'add-module');
         renderTree(AP.state.getCurrentProject());
-        AP.ui.toast('Module added', 'success');
+        // toast with undo shown automatically via state.onCommit
       });
     };
     tree.appendChild(addBtn);
@@ -87,7 +87,7 @@
           m.topics.push({ id: tId, title: title, estimatedMinutes: 0, content: [], keyTakeaways: [] });
         }, 'add-topic');
         renderTree(AP.state.getCurrentProject());
-        AP.ui.toast('Topic added', 'success');
+        // toast with undo shown automatically via state.onCommit
       });
     };
 
@@ -106,7 +106,7 @@
             AP.editor.showPlaceholder();
           }
           renderTree(AP.state.getCurrentProject());
-          AP.ui.toast('Module deleted', 'info');
+          // toast with undo shown automatically via state.onCommit
         },
         true
       );
@@ -199,7 +199,7 @@
             AP.editor.showPlaceholder();
           }
           renderTree(AP.state.getCurrentProject());
-          AP.ui.toast('Topic deleted', 'info');
+          // toast with undo shown automatically via state.onCommit
         },
         true
       );
