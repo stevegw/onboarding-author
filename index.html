@@ -112,6 +112,7 @@
               <button class="btn btn-sm mode-toggle mode-author" id="mode-toggle-btn" title="Switch to Preview mode">👁 Preview</button>
               <button class="btn btn-secondary btn-sm" id="save-raw-btn" title="Save raw project JSON">💾 Save JSON</button>
               <button class="btn btn-secondary btn-sm" id="pwa-export-btn" title="Export as installable PWA">📦 PWA</button>
+              <button class="btn btn-secondary btn-sm" id="sp-export-btn" title="Export for SharePoint">🏢 SharePoint</button>
             </div>
           </div>
 
@@ -167,6 +168,7 @@
 <script src="js/editor.js"></script>
 <script src="js/export.js"></script>
 <script src="js/pwa-export.js"></script>
+<script src="js/sharepoint-export.js"></script>
 <script src="js/publish.js"></script>
 <script src="js/narration.js"></script>
 <script src="js/router.js"></script>
@@ -250,6 +252,11 @@
     var p = AP.state.getCurrentProject();
     if (!p) { AP.ui.toast('No project open', 'error'); return; }
     AP.pwaExport.exportPWA(p);
+  };
+  document.getElementById('sp-export-btn').onclick = function () {
+    var p = AP.state.getCurrentProject();
+    if (!p) { AP.ui.toast('No project open', 'error'); return; }
+    AP.spExport.exportSharePoint(p);
   };
 
   // ── Mode toggle ──
