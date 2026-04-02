@@ -1264,8 +1264,35 @@ h3.preview-heading { font-size: 17px; font-weight: 600; }
   background: var(--bg-base);
   transition: all var(--transition);
 }
+.preview-match-item {
+  cursor: pointer;
+}
 .preview-match-item:hover {
   border-color: var(--accent);
+}
+.preview-match-item.match-selected {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+.preview-match-item.match-correct {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  opacity: 0.7;
+  cursor: default;
+}
+.preview-match-item.match-wrong {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.06);
+  animation: match-shake 0.3s ease;
+}
+@keyframes match-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+.preview-match-item.match-done {
+  pointer-events: none;
 }
 
 /* ── Preview: Interactive Sort ── */
@@ -1313,6 +1340,43 @@ h3.preview-heading { font-size: 17px; font-weight: 600; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+.preview-sort-item.sort-dragging {
+  opacity: 0.4;
+}
+.preview-sort-item.sort-over {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.preview-sort-item.sort-correct {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.preview-sort-item.sort-incorrect {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.06);
+}
+.preview-sort-check {
+  margin-top: 10px;
+  padding: 7px 18px;
+  border-radius: var(--radius);
+  border: 1px solid var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.preview-sort-check:hover {
+  background: var(--accent);
+  color: var(--bg-primary);
+}
+.preview-sort-check.sort-check-correct {
+  background: var(--accent);
+  color: var(--bg-primary);
+  border-color: var(--accent);
 }
 
 /* ── Preview: Image ── */

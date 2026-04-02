@@ -154,20 +154,20 @@
     html += '<div class="preview-match-columns">';
     html += '<div class="preview-match-col">';
     html += '<div class="preview-match-label">Items</div>';
-    pairs.forEach(function (p) {
-      html += '<div class="preview-match-item">' + safeHtml(p.left) + '</div>';
+    pairs.forEach(function (p, i) {
+      html += '<div class="preview-match-item match-left" data-pair="' + i + '">' + safeHtml(p.left) + '</div>';
     });
     html += '</div>';
     html += '<div class="preview-match-col">';
     html += '<div class="preview-match-label">Matches</div>';
-    // Show shuffled
-    var shuffled = pairs.slice();
+    // Show shuffled but track original pair index
+    var shuffled = pairs.map(function (p, i) { return { right: p.right, idx: i }; });
     for (var i = shuffled.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
     }
-    shuffled.forEach(function (p) {
-      html += '<div class="preview-match-item">' + safeHtml(p.right) + '</div>';
+    shuffled.forEach(function (s) {
+      html += '<div class="preview-match-item match-right" data-pair="' + s.idx + '">' + safeHtml(s.right) + '</div>';
     });
     html += '</div>';
     html += '</div>';
@@ -189,12 +189,13 @@
       var tmp = shuffled[i]; shuffled[i] = shuffled[j]; shuffled[j] = tmp;
     }
     shuffled.forEach(function (s, si) {
-      html += '<div class="preview-sort-item">';
+      html += '<div class="preview-sort-item" draggable="true" data-correct="' + s.idx + '">';
       html += '<span class="preview-sort-handle">☰</span>';
       html += '<span class="preview-sort-num">' + (si + 1) + '</span>';
       html += '<span>' + safeHtml(s.text) + '</span>';
       html += '</div>';
     });
+    html += '<button class="preview-sort-check" type="button">Check Order</button>';
     html += '</div>';
     return html;
   }
@@ -285,24 +286,155 @@
     });
 
     // Knowledge check: click option to answer
-    container.querySelectorAll('.preview-kc-question').forEach(function (qEl) {
-      var answered = false;
-      qEl.querySelectorAll('.preview-kc-option').forEach(function (optEl) {
-        optEl.addEventListener('click', function () {
-          if (answered) return;
-          answered = true;
-          var isCorrect = optEl.getAttribute('data-kc-correct') === 'true';
-          optEl.classList.add(isCorrect ? 'kc-correct' : 'kc-incorrect');
-          // Highlight the correct answer
-          qEl.querySelectorAll('.preview-kc-option').forEach(function (o) {
-            if (o.getAttribute('data-kc-correct') === 'true') o.classList.add('kc-correct');
+    container.querySelectorAll('.preview-knowledge-check').forEach(function (kcEl) {
+      var totalQs = kcEl.querySelectorAll('.preview-kc-question').length;
+      var correctCount = 0;
+      var answeredCount = 0;
+
+      kcEl.querySelectorAll('.preview-kc-question').forEach(function (qEl) {
+        var answered = false;
+        qEl.querySelectorAll('.preview-kc-option').forEach(function (optEl) {
+          optEl.addEventListener('click', function () {
+            if (answered) return;
+            answered = true;
+            answeredCount++;
+            var isCorrect = optEl.getAttribute('data-kc-correct') === 'true';
+            if (isCorrect) correctCount++;
+            optEl.classList.add(isCorrect ? 'kc-correct' : 'kc-incorrect');
+            // Highlight the correct answer
+            qEl.querySelectorAll('.preview-kc-option').forEach(function (o) {
+              if (o.getAttribute('data-kc-correct') === 'true') o.classList.add('kc-correct');
+            });
+            // Show rationale
+            var rat = qEl.querySelector('.preview-kc-rationale');
+            if (rat) rat.classList.add('kc-visible');
+            qEl.classList.add('kc-answered');
+
+            // Check if all questions answered
+            if (answeredCount === totalQs) {
+              var pct = Math.round(correctCount / totalQs * 100);
+              var msg = correctCount === totalQs ? '\uD83C\uDFC6 Great job!' : pct >= 75 ? '\u2B50 Good effort!' : '\uD83D\uDCDA Keep studying!';
+              if (AP.ui && AP.ui.toast) AP.ui.toast(msg + ' ' + correctCount + '/' + totalQs + ' (' + pct + '%)', pct >= 75 ? 'success' : 'info');
+            }
           });
-          // Show rationale
-          var rat = qEl.querySelector('.preview-kc-rationale');
-          if (rat) rat.classList.add('kc-visible');
-          qEl.classList.add('kc-answered');
         });
       });
+    });
+
+    // Interactive match: click left then right to match
+    container.querySelectorAll('.preview-match').forEach(function (matchEl) {
+      var selectedLeft = null;
+
+      matchEl.querySelectorAll('.match-left').forEach(function (leftEl) {
+        leftEl.addEventListener('click', function () {
+          if (leftEl.classList.contains('match-done')) return;
+          // Deselect previous
+          if (selectedLeft) selectedLeft.classList.remove('match-selected');
+          selectedLeft = leftEl;
+          leftEl.classList.add('match-selected');
+        });
+      });
+
+      matchEl.querySelectorAll('.match-right').forEach(function (rightEl) {
+        rightEl.addEventListener('click', function () {
+          if (!selectedLeft || rightEl.classList.contains('match-done')) return;
+          var leftPair = selectedLeft.getAttribute('data-pair');
+          var rightPair = rightEl.getAttribute('data-pair');
+          var correct = leftPair === rightPair;
+
+          var thisLeft = selectedLeft;
+          thisLeft.classList.remove('match-selected');
+          selectedLeft = null;
+          if (correct) {
+            thisLeft.classList.add('match-done', 'match-correct');
+            rightEl.classList.add('match-done', 'match-correct');
+            // Check if all matched
+            var total = matchEl.querySelectorAll('.match-left').length;
+            var done = matchEl.querySelectorAll('.match-left.match-done').length;
+            if (done === total) {
+              if (AP.ui && AP.ui.toast) AP.ui.toast('\u2713 All matched correctly!', 'success');
+            }
+          } else {
+            thisLeft.classList.add('match-wrong');
+            rightEl.classList.add('match-wrong');
+            setTimeout(function () {
+              thisLeft.classList.remove('match-wrong');
+              rightEl.classList.remove('match-wrong');
+            }, 800);
+          }
+        });
+      });
+    });
+
+    // Interactive sort: drag to reorder
+    container.querySelectorAll('.preview-sort').forEach(function (sortEl) {
+      var dragItem = null;
+
+      sortEl.querySelectorAll('.preview-sort-item').forEach(function (item) {
+        item.addEventListener('dragstart', function (e) {
+          dragItem = item;
+          item.classList.add('sort-dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        });
+
+        item.addEventListener('dragend', function () {
+          item.classList.remove('sort-dragging');
+          dragItem = null;
+          // Remove all drop indicators
+          sortEl.querySelectorAll('.sort-over').forEach(function (el) {
+            el.classList.remove('sort-over');
+          });
+          // Re-number items
+          sortEl.querySelectorAll('.preview-sort-item').forEach(function (el, i) {
+            var num = el.querySelector('.preview-sort-num');
+            if (num) num.textContent = i + 1;
+          });
+        });
+
+        item.addEventListener('dragover', function (e) {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          if (item !== dragItem) {
+            item.classList.add('sort-over');
+          }
+        });
+
+        item.addEventListener('dragleave', function () {
+          item.classList.remove('sort-over');
+        });
+
+        item.addEventListener('drop', function (e) {
+          e.preventDefault();
+          item.classList.remove('sort-over');
+          if (dragItem && dragItem !== item) {
+            // Insert dragged item before or after the drop target
+            var items = Array.prototype.slice.call(sortEl.querySelectorAll('.preview-sort-item'));
+            var dragIdx = items.indexOf(dragItem);
+            var dropIdx = items.indexOf(item);
+            if (dragIdx < dropIdx) {
+              sortEl.insertBefore(dragItem, item.nextSibling);
+            } else {
+              sortEl.insertBefore(dragItem, item);
+            }
+          }
+        });
+      });
+
+      // Check order button
+      var checkBtn = sortEl.querySelector('.preview-sort-check');
+      if (checkBtn) {
+        checkBtn.addEventListener('click', function () {
+          var allCorrect = true;
+          sortEl.querySelectorAll('.preview-sort-item').forEach(function (el, i) {
+            var correct = parseInt(el.getAttribute('data-correct'), 10) === i;
+            el.classList.remove('sort-correct', 'sort-incorrect');
+            el.classList.add(correct ? 'sort-correct' : 'sort-incorrect');
+            if (!correct) allCorrect = false;
+          });
+          checkBtn.textContent = allCorrect ? '\u2713 Correct!' : 'Try again';
+          checkBtn.classList.toggle('sort-check-correct', allCorrect);
+        });
+      }
     });
   }
 
